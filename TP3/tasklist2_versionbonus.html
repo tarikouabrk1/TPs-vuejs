@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP Vue.js 3 - Gestion des Tâches</title>
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f3f4f6, #e2e8f0);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .task-list {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; color: #2c3e50; }
+    .filters, .task-form { 
+        text-align: center;
+        margin-bottom: 1.5rem; }
+    .filters button, .task-form button { 
+      margin: 5px; 
+      padding: 0.5rem 1rem; 
+      border: none; 
+      border-radius: 4px; 
+      background-color: #007bff; 
+      color: white; cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .filters button:hover, .task-form button:hover { 
+         background-color: #0056b3;
+         transform: scale(1.05); }
+    .filters .active { 
+        background-color: #28a745; 
+    }
+    ul { 
+        list-style: none; 
+        padding: 0; 
+    }
+    li { 
+        border: 1px solid #eee;
+        margin-bottom: 1rem; 
+        padding: 1rem;
+        border-radius: 6px;
+        background-color: #fafafa; 
+    }
+    p.completed { 
+        color: #28a745; 
+        font-weight: bold; 
+    }
+    li button { 
+        margin-left: 5px; 
+        padding: 0.5rem;
+        border: none; 
+        border-radius: 4px; 
+        cursor: pointer; 
+    }
+    .complete-btn { 
+        background-color: #28a745; 
+        color: white; 
+    }
+    .delete-btn { 
+        background-color: #dc3545; 
+        color: white; 
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="task-list">
+      <h1>Gestion des Tâches</h1>
+      <p>Total des tâches : {{ totalTasks }}</p>
+      <div class="task-form">
+        <input v-model="newTaskTitle" placeholder="Titre de la tâche">
+        <input v-model="newTaskDescription" placeholder="Description">
+        <button @click="addTask">Ajouter</button>
+      </div>
+      <div class="filters">
+        <button @click="filter = 'all'" :class="{ active: filter === 'all' }">Toutes</button>
+        <button @click="filter = 'pending'" :class="{ active: filter === 'pending' }">À faire</button>
+        <button @click="filter = 'completed'" :class="{ active: filter === 'completed' }">Terminées</button>
+      </div>
+      <ul>
+        <li v-for="task in filteredTasks" :key="task.id">
+          <h2>{{ task.title }}</h2>
+          <p>{{ task.description }}</p>
+          <p :class="{ completed: task.completed }">{{ task.completed ? "Terminée" : "À faire" }}</p>
+          <button class="complete-btn" v-show="!task.completed" @click="markCompleted(task)">✔</button>
+          <button class="delete-btn" @click="deleteTask(task.id)">✖</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+          filter: 'all',
+          newTaskTitle: '',
+          newTaskDescription: ''
+        }
+      },
+      computed: {
+        filteredTasks() {
+          if (this.filter === 'completed') return this.tasks.filter(task => task.completed);
+          if (this.filter === 'pending') return this.tasks.filter(task => !task.completed);
+          return this.tasks;
+        },
+        totalTasks() { return this.tasks.length; }
+      },
+      methods: {
+        saveTasks() { localStorage.setItem('tasks', JSON.stringify(this.tasks)); },
+        addTask() {
+          if (this.newTaskTitle.trim() === '') return;
+          this.tasks.push({
+            id: Date.now(),
+            title: this.newTaskTitle,
+            description: this.newTaskDescription,
+            completed: false
+          });
+          this.newTaskTitle = '';
+          this.newTaskDescription = '';
+          this.saveTasks();
+        },
+        markCompleted(task) {
+          task.completed = true;
+          this.saveTasks();
+        },
+        deleteTask(id) {
+          this.tasks = this.tasks.filter(task => task.id !== id);
+          this.saveTasks();
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+</html>
+</body>
