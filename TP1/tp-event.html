@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Manipulation de Vue</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+        /* Style global */
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Conteneur principal */
+        #monapp {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            width: 50%;
+            max-width: 400px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Effet d'animation au survol */
+        #monapp:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Boutons stylisés */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Style du champ de texte */
+        input {
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 16px;
+            width: 85%;
+            transition: border 0.3s ease-in-out;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Style du compteur */
+        .compteur {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #333;
+        }
+
+        /* Animation du message d'erreur */
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 12px;
+            font-size: 14px;
+            transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        /* Ajout d'une animation lorsqu'une erreur s'affiche */
+        .error:not(.hidden) {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<div id="monapp">
+    <button @click="titre = 'Cliqué'">{{ titre }}</button>
+    <br>
+    <div class="compteur">
+        <button @click="compteur++">++</button> 
+        {{ compteur }} 
+        <button @click="compteur--">--</button>
+    </div>
+    <input type="text" v-model="texte" @input="verifierTexte" placeholder="Entrez du texte...">
+    <p :class="{ hidden: !afficherErreur, error: afficherErreur }">Veuillez ne pas inclure d'espaces.</p>
+</div>
+
+<script>
+    const appli = {
+        data() {
+            return {
+                titre: "Cliquer moi",
+                compteur: 0,
+                texte: "",
+                afficherErreur: false
+            };
+        },
+        methods: {
+            verifierTexte() {
+                this.afficherErreur = this.texte.includes(" ");
+            }
+        }
+    };
+
+    Vue.createApp(appli).mount("#monapp");
+</script>
+
+</body>
+</html>
