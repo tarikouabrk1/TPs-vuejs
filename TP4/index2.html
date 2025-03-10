@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Bonnes Pièces</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.js"></script>
+
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    :root {
+        --primary-color: #1E3A8A;  /* Bleu nuit */
+        --secondary-color: #FACC15; /* Doré */
+        --background-color: #F8FAFC; /* Fond clair */
+        --card-background: white;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        max-width: 1200px;
+        margin: auto;
+        padding: 16px;
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--background-color);
+        color: #333;
+    }
+
+    header {
+        display: flex;
+        height: 70px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px var(--shadow-color);
+    }
+
+    header img {
+        height: 100px;  /* Ajuste la taille */
+        width: auto;
+        margin-right: 10px;
+    }
+
+
+    header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    main {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .filtres {
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        min-width: 300px;
+        min-height: 400px;
+        height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .filtres h3 {
+        text-align: center;
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+
+    .filtres input,
+    .filtres label{
+        width: 90%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+    .filtres select{
+        width: 97%;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .filtres input[type="checkbox"] {
+        width: auto;
+        margin-right: 8px;
+    }
+
+    .filtres label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+    }
+
+
+    .fiches {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .fiche {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Aligne le contenu et pousse le bouton en bas */
+        background: var(--card-background);
+        padding: 16px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px var(--shadow-color);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;  /* Assure que toutes les fiches ont la même hauteur */
+    }
+
+    .fiche .info {
+        flex-grow: 1; /* Permet au texte de s’étirer et d’aligner le bouton */
+    }
+
+    .fiche button {
+        background-color: var(--secondary-color);
+        color: #333;
+        border: none;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+        margin-top: auto; /* Place le bouton en bas */
+    }
+
+    .fiche button:hover {
+        background-color: #EAB308;
+    }
+
+
+    .fiche button:disabled {
+        background-color: gray;
+        cursor: not-allowed;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        main {
+            grid-template-columns: 1fr;
+        }
+
+        .filtres {
+            width: 100%;
+        }
+
+        .fiches {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <img src="images/pieces.png" alt="LOGO">
+            <h1>Les Bonnes Pièces</h1>
+        </header>
+
+        <main>
+            <!-- Menu de recherche -->
+            <section class="filtres">
+                <h3>Filtres</h3>
+                <input type="text" v-model="recherche" placeholder="Rechercher une pièce...">
+                
+                <select v-model="categorie">
+                    <option value="">Toutes les catégories</option>
+                    <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+                </select>
+                
+                <label>
+                    <input type="checkbox" v-model="disponibleSeulement"> Disponible en stock
+                </label>
+                
+                <select v-model="tri">
+                    <option value="">Trier par</option>
+                    <option value="croissant">Prix croissant</option>
+                    <option value="decroissant">Prix décroissant</option>
+                </select>
+            </section>
+        
+            <!-- Fiches produits -->
+            <section class="fiches">
+                <div v-for="piece in piecesFiltrees" :key="piece.id" class="fiche">
+                    <img :src="piece.image" :alt="piece.nom">
+                    <h4>{{ piece.nom }}</h4>
+                    <p>Prix: {{ piece.prix }} €</p>
+                    <p v-if="piece.disponible">En stock</p>
+                    <p v-else style="color: red;">Rupture de stock</p>
+                    <button @click="ajouterAuPanier(piece)" :disabled="!piece.disponible">
+                        Ajouter au panier
+                    </button>
+                </div>
+            </section>
+        
+            <!-- PANIER -->
+            <section class="panier" v-if="panier.length > 0">
+                <h3>🛒 Votre panier</h3>
+                <ul>
+                    <li v-for="(item, index) in panier" :key="index">
+                        {{ item.nom }} - {{ item.prix }} € 
+                        <button @click="retirerDuPanier(index)">❌</button>
+                    </li>
+                </ul>
+                <h4>Total : {{ totalPanier }} €</h4>
+            </section>
+        </main>
+        
+    </div>
+
+    <script type="module">
+        const app = Vue.createApp({
+    data() {
+        return {
+            pieces: [], 
+            recherche: '', 
+            categorie: '', 
+            disponibleSeulement: false, 
+            tri: '', 
+            panier: [] 
+        };
+    },
+    computed: {
+        piecesFiltrees() {
+            let resultat = this.pieces;
+
+            // Filtrage par recherche
+            if (this.recherche) {
+                resultat = resultat.filter(piece =>
+                    piece.nom.toLowerCase().startsWith(this.recherche.toLowerCase())
+                );
+            }
+
+            // Filtrage par catégorie
+            if (this.categorie) {
+                resultat = resultat.filter(piece => piece.categorie === this.categorie);
+            }
+
+            // Filtrage par disponibilité
+            if (this.disponibleSeulement) {
+                resultat = resultat.filter(piece => piece.disponible);
+            }
+
+            // Tri par prix
+            if (this.tri === 'croissant') {
+                resultat = resultat.sort((a, b) => a.prix - b.prix);
+            } else if (this.tri === 'decroissant') {
+                resultat = resultat.sort((a, b) => b.prix - a.prix);
+            }
+
+            return resultat;
+        },
+        categories() {
+            return [...new Set(this.pieces.map(piece => piece.categorie))];
+        },
+        totalPanier() {
+            return this.panier.reduce((total, item) => total + item.prix, 0);
+        }
+    },
+    methods: {
+        ajouterAuPanier(piece) {
+            this.panier.push(piece);
+            alert(`${piece.nom} ajouté au panier !`);
+        },
+        retirerDuPanier(index) {
+            this.panier.splice(index, 1);
+        }
+    },
+    mounted() {
+        fetch('./pieces-autos.json')
+            .then(response => response.json())
+            .then(data => {
+                this.pieces = data.map(piece => ({
+                    ...piece,
+                    disponible: Math.random() > 0.5, // Simuler la disponibilité
+                    image: `images/${piece.nom}.png` 
+                }));
+            });
+    }
+});
+
+app.mount("#app");
+</script> 
+</body>
+</html>
