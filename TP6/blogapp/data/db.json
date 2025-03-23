@@ -1,0 +1,84 @@
+{
+  "posts": [
+    {
+      "id": "3",
+      "title": "Docker pour les développeurs frontend",
+      "body": "Même les développeurs frontend peuvent bénéficier de Docker. Apprenez à containeriser vos applications et à gérer les dépendances de manière cohérente.",
+      "tags": [
+        "docker",
+        "devops"
+      ],
+      "createdAt": "2024-03-05"
+    },
+    {
+      "id": "4",
+      "title": "TypeScript vs JavaScript",
+      "body": "Comparaison détaillée des avantages du typage statique pour les projets d'entreprise et quand il vaut mieux rester sur JavaScript pur.",
+      "tags": [
+        "typescript",
+        "javascript"
+      ],
+      "createdAt": "2024-03-18"
+    },
+    {
+      "id": "5",
+      "title": "SEO pour les SPA modernes",
+      "body": "Techniques avancées pour optimiser le référencement des applications monopages (React, Vue, Angular) avec le rendu côté serveur.",
+      "tags": [
+        "seo",
+        "webdev"
+      ],
+      "createdAt": "2024-04-02"
+    },
+    {
+      "id": "6",
+      "title": "Guide complet de GraphQL",
+      "body": "Implémentez une API GraphQL performante avec Apollo Server et client. Schémas, résolveurs et bonnes pratiques de sécurité inclus.",
+      "tags": [
+        "graphql",
+        "api"
+      ],
+      "createdAt": "2024-04-15"
+    },
+    {
+      "id": "7",
+      "title": "Animations CSS modernes",
+      "body": "Maîtrisez les animations fluides avec CSS : transitions, keyframes, et optimisations de performance pour une expérience utilisateur parfaite.",
+      "tags": [
+        "css",
+        "frontend"
+      ],
+      "createdAt": "2024-05-01"
+    },
+    {
+      "id": "8",
+      "title": "Microservices avec Node.js",
+      "body": "Architecture microservices de A à Z : communication entre services, gestion des erreurs et déploiement avec Kubernetes.",
+      "tags": [
+        "nodejs",
+        "microservices"
+      ],
+      "createdAt": "2024-05-10"
+    },
+    {
+      "id": "9",
+      "title": "Sécurité des API REST",
+      "body": "Protégez vos API : validation des entrées, JWT, OAuth2, et protection contre les attaques courantes (SQLi, XSS).",
+      "tags": [
+        "security",
+        "api"
+      ],
+      "createdAt": "2024-05-20"
+    },
+    {
+      "id": "10",
+      "title": "Intégration continue avec GitHub Actions",
+      "body": "Automatisez vos tests et déploiements avec des workflows CI/CD personnalisés. Exemples concrets pour des projets JavaScript.",
+      "tags": [
+        "devops",
+        "github"
+      ],
+      "createdAt": "2024-06-05"
+    }
+  ]
+}
