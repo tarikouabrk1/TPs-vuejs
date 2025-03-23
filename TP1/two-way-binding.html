@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Manipulation de Vue</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            height: 100vh;
+            
+        }
+        
+        .rouge { color: red; }
+        .bleu { color: blue; }
+        .vert { color: green; }
+    </style>
+</head>
+<body>
+
+<div id="monapp">
+	<li><strong>Couleur de la police</strong></li>
+    <label>
+        <input type="radio" value="rouge" v-model="couleur"> Rouge
+    </label>
+	<br>
+    <label>
+        <input type="radio" value="bleu" v-model="couleur"> Bleu
+    </label>
+	<br>
+    <label>
+        <input type="radio" value="vert" v-model="couleur"> Vert
+    </label>
+    
+    <br>
+    
+    <li>
+         <strong>Afficher/Cacher le paragraphe? </strong><input type="checkbox" v-model="visible">
+    </li>
+
+    <br>
+
+    <p v-if="visible" :class="couleur">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Obcaecati cupiditate exercitationem totam 
+		dicta aliquam cumque similique, minus impedit recusandae veritatis illum velit quos voluptatibus magni
+		repellat neque. Magni, aperiam culpa?
+    </p>
+</div>
+
+<script>
+    const appli = {
+        data() {
+            return {
+                couleur: "rouge",  // Couleur par défaut
+                visible: true      // Paragraphe affiché par défaut
+            };
+        }
+    };
+    Vue.createApp(appli).mount("#monapp");
+</script>
+</body>
+</html>

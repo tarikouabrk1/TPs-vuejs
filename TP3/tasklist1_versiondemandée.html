@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP Vue.js 3 - Gestion des Tâches</title>
+  <!-- Lien vers Vue.js 3 via CDN -->
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+     body {
+      background: linear-gradient(135deg, #f3f4f6, #e2e8f0);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    /* Conteneur principal de la liste de tâches */
+    .task-list {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .task-list h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+    }
+
+    /* Style pour la section de filtres */
+    .filters {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .filters button {
+      margin: 0 5px;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #ddd;
+      color: #333;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .filters button:hover {
+      background-color: #ccc;
+      transform: scale(1.05);
+    }
+
+    .filters .active {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    /* Style de la liste */
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      border: 1px solid #eee;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      background-color: #fafafa;
+      transition: box-shadow 0.3s ease;
+    }
+
+    li:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    li p {
+      margin: 0.5rem 0;
+    }
+
+    li h2 {
+      margin-top: 0;
+      color: #444;
+    }
+
+    /* Style pour le statut de la tâche */
+    p.completed {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    /* Style pour le bouton de marquage */
+    li button {
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    li button:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="task-list">
+      <h1>Gestion des Tâches</h1>
+      <p>Total des tâches : {{ totalTasks }}</p>
+      
+      <div class="filters">
+        <button @click="filter = 'all'" :class="{ active: filter === 'all' }">Toutes</button>
+        <button @click="filter = 'pending'" :class="{ active: filter === 'pending' }">À faire</button>
+        <button @click="filter = 'completed'" :class="{ active: filter === 'completed' }">Terminées</button>
+      </div>
+
+      <ul>
+        <li v-for="task in filteredTasks" :key="task.id">
+          <p>ID : {{ task.id }}</p>
+          <h2>{{ task.title }}</h2>
+          <p>{{ task.description }}</p>
+          <p :class="{ completed: task.completed }">
+            {{ task.completed ? "Terminée" : "À faire" }}
+          </p>
+          <!-- Bouton affiché uniquement si la tâche n'est pas terminée -->
+          <button v-show="!task.completed" @click="markCompleted(task)">Marquer comme terminée</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          tasks: [],
+          filter: 'all'
+        }
+      },
+      computed: {
+        // Renvoie les tâches en fonction du filtre sélectionné
+        filteredTasks() {
+          if (this.filter === 'completed') {
+            return this.tasks.filter(task => task.completed);
+          } else if (this.filter === 'pending') {
+            return this.tasks.filter(task => !task.completed);
+          }
+          return this.tasks;
+        },
+        // Nombre total de tâches
+        totalTasks() {
+          return this.tasks.length;
+        }
+      },
+      methods: {
+        // Charge les tâches depuis le fichier JSON
+        fetchTasks() {
+          fetch('tasklist.json')
+            .then(response => response.json())
+            .then(data => {
+              this.tasks = data;
+            })
+            .catch(error => {
+              console.error('Erreur de chargement des tâches :', error);
+            });
+        },
+        // Marque la tâche comme terminée
+        markCompleted(task) {
+          task.completed = true;
+        }
+      },
+      mounted() {
+        this.fetchTasks();
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
